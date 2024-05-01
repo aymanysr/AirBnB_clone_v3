@@ -4,10 +4,10 @@ create flask app, and register the blueprint app_views
 to the Flask app.
 """
 
-from api.v1.views import app_views
-from flask import Flask
-from models import storage
 from os import getenv
+from flask import Flask
+from api.v1.views import app_views
+from models import storage
 
 
 app = Flask(__name__)
