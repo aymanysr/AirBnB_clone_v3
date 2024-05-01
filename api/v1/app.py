@@ -5,7 +5,7 @@ to the Flask app.
 """
 
 from os import getenv
-from flask import Flask
+from flask import Flask, jsonify
 from api.v1.views import app_views
 from models import storage
 
@@ -19,6 +19,12 @@ app.register_blueprint(app_views)
 def teardown(exception):
     """teardown the app"""
     storage.close()
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    """return a JSON-formatted 404 status code response"""
+    return jsonify({"error": "Not found"}), 404
 
 
 if __name__ == '__main__':
