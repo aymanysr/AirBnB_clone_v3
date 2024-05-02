@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """
-create flask app; app_views
+Create a new view for State objects
+that handles all default RESTFul API actions:
 """
 
 from flask import jsonify, request
