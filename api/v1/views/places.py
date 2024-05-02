@@ -6,6 +6,7 @@ that handles all default RESTFul API actions
 from flask import jsonify, request
 from models.place import Place
 from models.city import City
+from models.user import User
 from models import storage
 from api.v1.views import app_views
 
@@ -59,6 +60,8 @@ def create_place(city_id):
     data = request.get_json()
     if 'user_id' not in data:
         return jsonify({'message': 'Missing user_id'}), 400
+    if storage.get(User, data['user_id']) is None:
+        return jsonify({'message': 'User not found'}), 404
     if 'name' not in data:
         return jsonify({'message': 'Missing name'}), 400
 
