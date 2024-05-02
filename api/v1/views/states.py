@@ -5,8 +5,8 @@ create flask app; app_views
 
 from flask import jsonify, abort, request
 from models.state import State
-from api.v1.views import app_views
 from models import storage
+from api.v1.views import app_views
 
 
 @app_views.route('/states', strict_slashes=False)
@@ -37,8 +37,7 @@ def delete_state(state_id):
         storage.delete(state)
         storage.save()
         return jsonify({}), 200
-    else:
-        abort(404)
+    abort(404)
 
 
 @app_views.route('/states/', methods=['POST'], strict_slashes=False)
@@ -76,5 +75,4 @@ def update_state(state_id):
                 setattr(state, key, value)
         state.save()
         return jsonify(state.to_dict()), 200
-    else:
-        abort(404)
+    abort(404)
