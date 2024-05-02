@@ -24,7 +24,7 @@ def get_state(state_id):
 
     if state:
         return jsonify(state.to_dict())
-    return abort(404)
+    return jsonify({'message': 'Not found'}), 404
 
 
 @app_views.route('/states/<state_id>', methods=['DELETE'],
@@ -37,24 +37,24 @@ def delete_state(state_id):
         storage.delete(state)
         storage.save()
         return jsonify({}), 200
-    abort(404)
+    return jsonify({'message': 'Not found'}), 404
 
 
 @app_views.route('/states/', methods=['POST'], strict_slashes=False)
 def create_state():
     """create a new state obj"""
     if request.content_type != 'application/json':
-        return abort(404, 'Not a JSON')
+        return jsonify({'message': 'Not a JSON'}), 400
     if not request.get_json():
-        return abort(400, 'Not a JSON')
+        return jsonify({'message': 'Not a JSON'}), 400
     kwargs = request.get_json()
 
     if 'name' not in kwargs:
-        return abort(400, 'Missing name')
+        return jsonify({'message': 'Missing name'}), 400
 
     new_state = State(**kwargs)
     new_state.save()
-    return jsonify(new_state.to_dict()), 200
+    return jsonify(new_state.to_dict()), 201
 
 
 @app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
@@ -62,11 +62,11 @@ def update_state(state_id):
     """update a state obj"""
 
     if request.content_type != 'application/json':
-        return abort(400, 'Not a JSON')
+        return jsonify({'message': 'Not a JSON'}), 400
     state = storage.get(State, state_id)
     if state:
         if not request.get_json():
-            return abort(400, 'Not a JSON')
+            return jsonify({'message': 'Not a JSON'}), 400
         data = request.get_json()
         ignore_keys = ['id', 'created_at', 'updated_at']
 
@@ -75,4 +75,4 @@ def update_state(state_id):
                 setattr(state, key, value)
         state.save()
         return jsonify(state.to_dict()), 200
-    abort(404)
+    return jsonify({'message': 'Not found'}), 404
